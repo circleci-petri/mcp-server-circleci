@@ -6,7 +6,7 @@
 
 Model Context Protocol (MCP) is a [new, standardized protocol](https://modelcontextprotocol.io/introduction) for managing context between large language models (LLMs) and external systems. In this repository, we provide an MCP Server for [CircleCI](https://circleci.com).
 
-This lets you use Cursor IDE, or any MCP Client, to use natural language to accomplish things with CircleCI, e.g.:
+This lets you use Cursor IDE, Windsurf, Copilot, or any MCP supported Client, to use natural language to accomplish things with CircleCI, e.g.:
 
 - `Find the latest failed pipeline on my branch and get logs`
   https://github.com/CircleCI-Public/mcp-server-circleci/wiki#circleci-mcp-server-with-cursor-ide
