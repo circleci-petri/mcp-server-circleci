@@ -15,6 +15,7 @@ export const runPipeline: ToolCallback<{
     workspaceRoot,
     gitRemoteURL,
     branch,
+    configContent,
     projectURL,
     pipelineChoiceName,
     projectSlug: inputProjectSlug,
@@ -115,6 +116,7 @@ export const runPipeline: ToolCallback<{
     projectSlug,
     branch: foundBranch,
     definitionId: runPipelineDefinitionId,
+    configContent,
   });
 
   return {
