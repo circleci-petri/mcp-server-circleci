@@ -5,12 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.1] - 2025-06-09
+
+### Added
+
+- Added `analyze_diff` tool to analyze git diffs against cursor rules to identify rule violations
+  - Evaluates code changes against repository coding standards and best practices
+  - Provides detailed violation reports with confidence scores and explanations
+  - Supports both staged and unstaged changes and all changes analysis
+  - Returns actionable feedback for maintaining code quality consistency
+
 ## [0.7.1] - 2025-05-14
 
 ### Updated
 
 - Updated `get_build_failure_logs`, `get_job_test_results`, and `get_latest_pipeline_status` tools to require a branch parameter when using projectSlug option
-
 
 ## [0.7.0] - 2025-05-13
 

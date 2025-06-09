@@ -362,7 +362,7 @@ https://docs.windsurf.com/windsurf/mcp
      - Example: "List my CircleCI projects"
 
   The tool returns a formatted list of projects, example output:
-  
+
   ```
   Projects followed:
   1. my-project (projectSlug: gh/organization/my-project)
@@ -370,7 +370,7 @@ https://docs.windsurf.com/windsurf/mcp
   ```
 
   This is particularly useful for:
-  
+
   - Identifying which CircleCI projects are available to you
   - Obtaining the projectSlug needed for other CircleCI tools
   - Selecting a project for subsequent operations
@@ -403,6 +403,43 @@ https://docs.windsurf.com/windsurf/mcp
 
   - Quickly running pipelines without visiting the CircleCI web UI
   - Running pipelines from a specific branch
+
+- `analyze_diff`
+
+  Analyzes git diffs against cursor rules to identify rule violations.
+
+  This tool can be used by providing:
+
+  1. Git Diff Content:
+
+     - Staged changes: `git diff --cached`
+     - Unstaged changes: `git diff`
+     - All changes: `git diff HEAD`
+     - Example: "Analyze my staged changes against the cursor rules"
+
+  2. Repository Rules:
+     - Rules from `.cursorrules` file in your repository root
+     - Rules from `.cursor/rules` directory
+     - Multiple rule files combined with `---` separator
+     - Example: "Check my diff against the TypeScript coding standards"
+
+  The tool provides:
+
+  - Detailed violation reports with confidence scores
+  - Specific explanations for each rule violation
+
+  Example usage scenarios:
+
+  - "Analyze my staged changes for any rule violations"
+  - "Check my unstaged changes against rules"
+
+  This is particularly useful for:
+
+  - Pre-commit code quality checks
+  - Ensuring consistency with team coding standards
+  - Catching rule violations before code review
+
+  The tool integrates with your existing cursor rules setup and provides immediate feedback on code quality, helping you catch issues early in the development process.
 
 # Development
 
