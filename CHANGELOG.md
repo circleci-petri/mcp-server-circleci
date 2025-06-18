@@ -5,12 +5,86 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.1] - 2025-06-17
+
+### Fixed
+
+- Add a .gitignore file to the flaky-tests-output directory to ignore all files in the directory
+
+## [0.10.0] - 2025-06-17
+
+### Added
+
+- Added `USE_FILE_OUTPUT` environment variable to `get_flaky_tests` tool
+  - When set to `true`, the tool will write flaky tests to files in the `./flaky-tests-output` directory instead of returning the results in the response
+  - The tool will return the file paths of the written files in the response
+
+## [0.9.2] - 2025-06-17
+
+### Added
+
+- Anthropic support on prompt eval script (w. auto-detection for OpenAI and Anthropic models)
+- Added `temperature` parameter support to prompt template tools
+  - Enhanced `create_prompt_template` tool with configurable temperature setting
+  - Enhanced `recommend_prompt_template_tests` tool with temperature parameter
+  - Default temperature value set to 1.0 for consistent prompt template generation
+
+### Updated
+
+- Updated default model from `gpt-4o-mini` to `gpt-4.1-mini` for prompt template tools
+- Enhanced evaluation script dependencies for improved compatibility
+  - Updated `deepeval` to version 3.0.3+ (from 2.8.2+)
+  - Updated `openai` to version 1.84.0+ (from 1.76.2+)
+  - Added `anthropic` version 0.54.0+ for Anthropic model support
+  - Updated `PyYAML` to version 6.0.2+
+
+## [0.9.1] - 2025-06-12
+
+### Added
+
+- Added `analyze_diff` tool to analyze git diffs against cursor rules to identify rule violations
+  - Evaluates code changes against repository coding standards and best practices
+  - Provides detailed violation reports with confidence scores and explanations
+  - Supports both staged and unstaged changes and all changes analysis
+  - Returns actionable feedback for maintaining code quality consistency
+
+## [0.9.0] - 2025-06-03
+
+### Added
+
+- Added `run_evaluation_tests` tool to run evaluation tests on CircleCI pipelines
+  - Support for running prompt template evaluation tests in CircleCI
+  - Integration with prompt template files from `./prompts` directory
+  - Dynamic CircleCI configuration generation for evaluation workflows
+  - Support for multiple prompt files with automatic parallelism configuration
+  - Compatible with both JSON and YAML prompt template formats
+  - Comprehensive error handling and validation for prompt template files
+- Enhanced `runPipeline` API to support custom configuration content
+  - Added `configContent` parameter to override default pipeline configuration
+  - Enables dynamic pipeline configuration for specialized use cases
+
+## [0.8.1] - 2025-05-28
+
+### Added
+
+- Enhanced prompt template tools with support for existing codebase prompts
+  - Added `promptOrigin` parameter to distinguish between new requirements and existing codebase prompts
+  - Added `model` parameter to specify target model for testing (defaults to gpt-4o-mini)
+  - Enhanced documentation and examples for prompt template creation
+  - Added integration guidance for codebase-sourced prompts
+  - Improved prompt templates file location, naming conventions, and structure
+
+## [0.8.0] - 2025-05-22
+
+### Added
+
+- Added `rerun_workflow` tool to rerun a workflow from its start or from the failed job
+
 ## [0.7.1] - 2025-05-14
 
 ### Updated
 
 - Updated `get_build_failure_logs`, `get_job_test_results`, and `get_latest_pipeline_status` tools to require a branch parameter when using projectSlug option
-
 
 ## [0.7.0] - 2025-05-13
 

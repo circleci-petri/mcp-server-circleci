@@ -15,13 +15,22 @@ https://github.com/user-attachments/assets/3c765985-8827-442a-a8dc-5069e01edb74
 
 ## Requirements
 
+- CircleCI Personal API Token - you can generate one through the CircleCI. [Learn more](https://circleci.com/docs/managing-api-tokens/) or [click here](https://app.circleci.com/settings/user/tokens) for quick access.
+
+For NPX installation:
+
 - pnpm package manager - [Learn more](https://pnpm.io/installation)
 - Node.js >= v18.0.0
-- CircleCI API token - you can generate one through the CircleCI. [Learn more](https://circleci.com/docs/managing-api-tokens/) or [click here](https://app.circleci.com/settings/user/tokens) for quick access.
+
+For Docker installation:
+
+- Docker - [Learn more](https://docs.docker.com/get-docker/)
 
 ## Installation
 
 ### Cursor
+
+#### Using NPX
 
 Add the following to your cursor MCP config:
 
@@ -39,13 +48,48 @@ Add the following to your cursor MCP config:
   }
 }
 ```
+To locate this file:
 
-See the guide below for more information on using MCP servers with cursor:
-https://docs.cursor.com/context/model-context-protocol#configuring-mcp-servers
+macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+[Claude Desktop setup](https://modelcontextprotocol.io/quickstart/user)
+
+
+#### Using Docker
+
+Add the following to your cursor MCP config:
+
+```json
+{
+  "mcpServers": {
+    "circleci-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "CIRCLECI_TOKEN",
+        "-e",
+        "CIRCLECI_BASE_URL",
+        "circleci:mcp-server-circleci"
+      ],
+      "env": {
+        "CIRCLECI_TOKEN": "your-circleci-token",
+        "CIRCLECI_BASE_URL": "https://circleci.com" // Optional - required for on-prem customers only
+      }
+    }
+  }
+}
+```
 
 ### VS Code
 
-To install CircleCI MCP Server for VS Code in `.vscode/mcp.json`
+#### Using NPX
+
+To install CircleCI MCP Server for VS Code in `.vscode/mcp.json`:
 
 ```json
 {
@@ -56,6 +100,12 @@ To install CircleCI MCP Server for VS Code in `.vscode/mcp.json`
       "id": "circleci-token",
       "description": "CircleCI API Token",
       "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "circleci-base-url",
+      "description": "CircleCI Base URL",
+      "default": "https://circleci.com"
     }
   ],
   "servers": {
@@ -65,17 +115,62 @@ To install CircleCI MCP Server for VS Code in `.vscode/mcp.json`
       "command": "npx",
       "args": ["-y", "@circleci/mcp-server-circleci"],
       "env": {
-        "CIRCLECI_TOKEN": "${input:circleci-token}"
+        "CIRCLECI_TOKEN": "${input:circleci-token}",
+        "CIRCLECI_BASE_URL": "${input:circleci-base-url}"
       }
     }
   }
 }
 ```
 
-See the guide below for more information on using MCP servers with VS Code:
-https://code.visualstudio.com/docs/copilot/chat/mcp-servers
+#### Using Docker
+
+To install CircleCI MCP Server for VS Code in `.vscode/mcp.json` using Docker:
+
+```json
+{
+  // 💡 Inputs are prompted on first server start, then stored securely by VS Code.
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "circleci-token",
+      "description": "CircleCI API Token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "circleci-base-url",
+      "description": "CircleCI Base URL",
+      "default": "https://circleci.com"
+    }
+  ],
+  "servers": {
+    // https://github.com/ppl-ai/modelcontextprotocol/
+    "circleci-mcp-server": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "CIRCLECI_TOKEN",
+        "-e",
+        "CIRCLECI_BASE_URL",
+        "circleci:mcp-server-circleci"
+      ],
+      "env": {
+        "CIRCLECI_TOKEN": "${input:circleci-token}",
+        "CIRCLECI_BASE_URL": "${input:circleci-base-url}"
+      }
+    }
+  }
+}
+```
 
 ### Claude Desktop
+
+#### Using NPX
 
 Add the following to your claude_desktop_config.json:
 
@@ -85,6 +180,34 @@ Add the following to your claude_desktop_config.json:
     "circleci-mcp-server": {
       "command": "npx",
       "args": ["-y", "@circleci/mcp-server-circleci"],
+      "env": {
+        "CIRCLECI_TOKEN": "your-circleci-token",
+        "CIRCLECI_BASE_URL": "https://circleci.com" // Optional - required for on-prem customers only
+      }
+    }
+  }
+}
+```
+
+#### Using Docker
+
+Add the following to your claude_desktop_config.json:
+
+```json
+{
+  "mcpServers": {
+    "circleci-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "CIRCLECI_TOKEN",
+        "-e",
+        "CIRCLECI_BASE_URL",
+        "circleci:mcp-server-circleci"
+      ],
       "env": {
         "CIRCLECI_TOKEN": "your-circleci-token",
         "CIRCLECI_BASE_URL": "https://circleci.com" // Optional - required for on-prem customers only
@@ -106,16 +229,28 @@ https://modelcontextprotocol.io/quickstart/user
 
 ### Claude Code
 
+#### Using NPX
+
 After installing Claude Code, run the following command:
 
 ```bash
 claude mcp add circleci-mcp-server -e CIRCLECI_TOKEN=your-circleci-token -- npx -y @circleci/mcp-server-circleci
 ```
 
+#### Using Docker
+
+After installing Claude Code, run the following command:
+
+```bash
+claude mcp add circleci-mcp-server -e CIRCLECI_TOKEN=your-circleci-token -e CIRCLECI_BASE_URL=https://circleci.com -- docker run --rm -i -e CIRCLECI_TOKEN -e CIRCLECI_BASE_URL circleci:mcp-server-circleci
+```
+
 See the guide below for more information on using MCP servers with Claude Code:
 https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp
 
 ### Windsurf
+
+#### Using NPX
 
 Add the following to your windsurf mcp_config.json:
 
@@ -134,6 +269,37 @@ Add the following to your windsurf mcp_config.json:
 }
 ```
 
+#### Using Docker
+
+Add the following to your windsurf mcp_config.json:
+
+```json
+{
+  "mcpServers": {
+    "circleci-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "CIRCLECI_TOKEN",
+        "-e",
+        "CIRCLECI_BASE_URL",
+        "circleci:mcp-server-circleci"
+      ],
+      "env": {
+        "CIRCLECI_TOKEN": "your-circleci-token",
+        "CIRCLECI_BASE_URL": "https://circleci.com" // Optional - required for on-prem customers only
+      }
+    }
+  }
+}
+```
+
+See the guide below for more information on using MCP servers with windsurf:
+https://docs.windsurf.com/windsurf/mcp
+
 ### Installing via Smithery
 
 To install CircleCI MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@CircleCI-Public/mcp-server-circleci):
@@ -142,23 +308,30 @@ To install CircleCI MCP Server for Claude Desktop automatically via [Smithery](h
 npx -y @smithery/cli install @CircleCI-Public/mcp-server-circleci --client claude
 ```
 
-See the guide below for more information on using MCP servers with windsurf:
-https://docs.windsurf.com/windsurf/mcp
-
 # Features
 
 ## Supported Tools
 
 - `get_build_failure_logs`
 
-  Retrieves detailed failure logs from CircleCI builds. This tool can be used in two ways:
+  Retrieves detailed failure logs from CircleCI builds. This tool can be used in three ways:
 
-  1. Using CircleCI URLs:
+  1. Using Project Slug and Branch (Recommended Workflow):
+
+     - First, list your available projects:
+       - Use the list_followed_projects tool to get your projects
+       - Example: "List my CircleCI projects"
+       - Then choose the project, which has a projectSlug associated with it
+       - Example: "Lets use my-project"
+     - Then ask to retrieve the build failure logs for a specific branch:
+       - Example: "Get build failures for my-project on the main branch"
+
+  2. Using CircleCI URLs:
 
      - Provide a failed job URL or pipeline URL directly
      - Example: "Get logs from https://app.circleci.com/pipelines/github/org/repo/123"
 
-  2. Using Local Project Context:
+  3. Using Local Project Context:
      - Works from your local workspace by providing:
        - Workspace root path
        - Git remote URL
@@ -182,14 +355,24 @@ https://docs.windsurf.com/windsurf/mcp
 
   Identifies flaky tests in your CircleCI project by analyzing test execution history. This leverages the flaky test detection feature described here: https://circleci.com/blog/introducing-test-insights-with-flaky-test-detection/#flaky-test-detection
 
-  This tool can be used in two ways:
+  This tool can be used in three ways:
 
-  1. Using CircleCI Project URL:
+  1. Using Project Slug (Recommended Workflow):
+
+     - First, list your available projects:
+       - Use the list_followed_projects tool to get your projects
+       - Example: "List my CircleCI projects"
+       - Then choose the project, which has a projectSlug associated with it
+       - Example: "Lets use my-project"
+     - Then ask to retrieve the flaky tests:
+       - Example: "Get flaky tests for my-project"
+
+  2. Using CircleCI Project URL:
 
      - Provide the project URL directly from CircleCI
      - Example: "Find flaky tests in https://app.circleci.com/pipelines/github/org/repo"
 
-  2. Using Local Project Context:
+  3. Using Local Project Context:
      - Works from your local workspace by providing:
        - Workspace root path
        - Git remote URL
@@ -208,14 +391,24 @@ https://docs.windsurf.com/windsurf/mcp
 
 - `get_latest_pipeline_status`
 
-  Retrieves the status of the latest pipeline for a given branch. This tool can be used in two ways:
+  Retrieves the status of the latest pipeline for a given branch. This tool can be used in three ways:
 
-  1. Using CircleCI Project URL:
+  1. Using Project Slug and Branch (Recommended Workflow):
+
+     - First, list your available projects:
+       - Use the list_followed_projects tool to get your projects
+       - Example: "List my CircleCI projects"
+       - Then choose the project, which has a projectSlug associated with it
+       - Example: "Lets use my-project"
+     - Then ask to retrieve the latest pipeline status for a specific branch:
+       - Example: "Get the status of the latest pipeline for my-project on the main branch"
+
+  2. Using CircleCI Project URL:
 
      - Provide the project URL directly from CircleCI
      - Example: "Get the status of the latest pipeline for https://app.circleci.com/pipelines/github/org/repo"
 
-  2. Using Local Project Context:
+  3. Using Local Project Context:
      - Works from your local workspace by providing:
        - Workspace root path
        - Git remote URL
@@ -254,9 +447,19 @@ https://docs.windsurf.com/windsurf/mcp
 
 - `get_job_test_results`
 
-  Retrieves test metadata for CircleCI jobs, allowing you to analyze test results without leaving your IDE. This tool can be used in two ways:
+  Retrieves test metadata for CircleCI jobs, allowing you to analyze test results without leaving your IDE. This tool can be used in three ways:
 
-  1. Using CircleCI URL (Recommended):
+  1. Using Project Slug and Branch (Recommended Workflow):
+
+     - First, list your available projects:
+       - Use the list_followed_projects tool to get your projects
+       - Example: "List my CircleCI projects"
+       - Then choose the project, which has a projectSlug associated with it
+       - Example: "Lets use my-project"
+     - Then ask to retrieve the test results for a specific branch:
+       - Example: "Get test results for my-project on the main branch"
+
+  2. Using CircleCI URL:
 
      - Provide a CircleCI URL in any of these formats:
        - Job URL: "https://app.circleci.com/pipelines/github/org/repo/123/workflows/abc-def/jobs/789"
@@ -264,7 +467,7 @@ https://docs.windsurf.com/windsurf/mcp
        - Pipeline URL: "https://app.circleci.com/pipelines/github/org/repo/123"
      - Example: "Get test results for https://app.circleci.com/pipelines/github/org/repo/123/workflows/abc-def"
 
-  2. Using Local Project Context:
+  3. Using Local Project Context:
      - Works from your local workspace by providing:
        - Workspace root path
        - Git remote URL
@@ -362,7 +565,7 @@ https://docs.windsurf.com/windsurf/mcp
      - Example: "List my CircleCI projects"
 
   The tool returns a formatted list of projects, example output:
-  
+
   ```
   Projects followed:
   1. my-project (projectSlug: gh/organization/my-project)
@@ -370,7 +573,7 @@ https://docs.windsurf.com/windsurf/mcp
   ```
 
   This is particularly useful for:
-  
+
   - Identifying which CircleCI projects are available to you
   - Obtaining the projectSlug needed for other CircleCI tools
   - Selecting a project for subsequent operations
@@ -379,9 +582,19 @@ https://docs.windsurf.com/windsurf/mcp
 
 - `run_pipeline`
 
-  Triggers a pipeline to run. This tool can be used in two ways:
+  Triggers a pipeline to run. This tool can be used in three ways:
 
-  1. Using CircleCI URL (Recommended):
+  1. Using Project Slug and Branch (Recommended Workflow):
+
+     - First, list your available projects:
+       - Use the list_followed_projects tool to get your projects
+       - Example: "List my CircleCI projects"
+       - Then choose the project, which has a projectSlug associated with it
+       - Example: "Lets use my-project"
+     - Then ask to run the pipeline for a specific branch:
+       - Example: "Run the pipeline for my-project on the main branch"
+
+  2. Using CircleCI URL:
 
      - Provide a CircleCI URL in any of these formats:
        - Job URL: "https://app.circleci.com/pipelines/github/org/repo/123/workflows/abc-def/jobs/789"
@@ -390,7 +603,7 @@ https://docs.windsurf.com/windsurf/mcp
        - Project URL with branch: "https://app.circleci.com/projects/github/org/repo?branch=main"
      - Example: "Run the pipeline for https://app.circleci.com/pipelines/github/org/repo/123/workflows/abc-def"
 
-  2. Using Local Project Context:
+  3. Using Local Project Context:
      - Works from your local workspace by providing:
        - Workspace root path
        - Git remote URL
@@ -403,6 +616,53 @@ https://docs.windsurf.com/windsurf/mcp
 
   - Quickly running pipelines without visiting the CircleCI web UI
   - Running pipelines from a specific branch
+
+- `rerun_workflow`
+
+  Reruns a workflow from its start or from the failed job.
+
+  The tool returns the ID of the newly-created workflow, and a link to monitor the new workflow.
+
+  This is particularly useful for:
+
+  - Quickly rerunning a workflow from its start or from the failed job without visiting the CircleCI web UI
+
+- `analyze_diff`
+
+  Analyzes git diffs against cursor rules to identify rule violations.
+
+  This tool can be used by providing:
+
+  1. Git Diff Content:
+
+     - Staged changes: `git diff --cached`
+     - Unstaged changes: `git diff`
+     - All changes: `git diff HEAD`
+     - Example: "Analyze my staged changes against the cursor rules"
+
+  2. Repository Rules:
+     - Rules from `.cursorrules` file in your repository root
+     - Rules from `.cursor/rules` directory
+     - Multiple rule files combined with `---` separator
+     - Example: "Check my diff against the TypeScript coding standards"
+
+  The tool provides:
+
+  - Detailed violation reports with confidence scores
+  - Specific explanations for each rule violation
+
+  Example usage scenarios:
+
+  - "Analyze my staged changes for any rule violations"
+  - "Check my unstaged changes against rules"
+
+  This is particularly useful for:
+
+  - Pre-commit code quality checks
+  - Ensuring consistency with team coding standards
+  - Catching rule violations before code review
+
+  The tool integrates with your existing cursor rules setup and provides immediate feedback on code quality, helping you catch issues early in the development process.
 
 # Development
 
@@ -425,6 +685,22 @@ https://docs.windsurf.com/windsurf/mcp
    ```bash
    pnpm build
    ```
+
+## Building Docker Container
+
+You can build the Docker container locally using:
+
+```bash
+docker build -t circleci:mcp-server-circleci .
+```
+
+This will create a Docker image tagged as `circleci:mcp-server-circleci` that you can use with any MCP client.
+
+To run the container:
+
+```bash
+docker run --rm -i -e CIRCLECI_TOKEN=your-circleci-token -e CIRCLECI_BASE_URL=https://circleci.com circleci:mcp-server-circleci
+```
 
 ## Development with MCP Inspector
 

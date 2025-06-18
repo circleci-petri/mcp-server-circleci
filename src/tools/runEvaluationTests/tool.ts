@@ -1,10 +1,18 @@
-import { runPipelineInputSchema } from './inputSchema.js';
-import { option1DescriptionBranchRequired } from '../shared/constants.js';
+import {
+  option1DescriptionBranchRequired,
+  promptsOutputDirectory,
+} from '../shared/constants.js';
+import { runEvaluationTestsInputSchema } from './inputSchema.js';
 
-export const runPipelineTool = {
-  name: 'run_pipeline' as const,
+export const runEvaluationTestsTool = {
+  name: 'run_evaluation_tests' as const,
   description: `
+    This tool allows the users to run evaluation tests on a circleci pipeline.
+    They can be referred to as "Prompt Tests" or "Evaluation Tests".
+
     This tool triggers a new CircleCI pipeline and returns the URL to monitor its progress.
+    The tool will generate an appropriate circleci configuration file and trigger a pipeline using this temporary configuration.
+    The tool will return the project slug.
 
     Input options (EXACTLY ONE of these THREE options must be used):
 
@@ -22,8 +30,10 @@ export const runPipelineTool = {
     - gitRemoteURL: The URL of the git remote repository
     - branch: The name of the current branch
 
-    Configuration:
-    - an optional configContent parameter can be provided to override the default pipeline configuration
+    Test Files:
+    - promptFiles: Array of prompt template file objects from the ${promptsOutputDirectory} directory, each containing:
+      * fileName: The name of the prompt template file
+      * fileContent: The contents of the prompt template file
 
     Pipeline Selection:
     - If the project has multiple pipeline definitions, the tool will return a list of available pipelines
@@ -41,5 +51,5 @@ export const runPipelineTool = {
     Returns:
     - A URL to the newly triggered pipeline that can be used to monitor its progress
     `,
-  inputSchema: runPipelineInputSchema,
+  inputSchema: runEvaluationTestsInputSchema,
 };

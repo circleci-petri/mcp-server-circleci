@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
   branchDescription,
   projectSlugDescription,
-} from '../sharedInputSchemas.js';
+} from '../shared/constants.js';
 
 export const runPipelineInputSchema = z.object({
   projectSlug: z.string().describe(projectSlugDescription).optional(),
@@ -38,6 +38,12 @@ export const runPipelineInputSchema = z.object({
       'The name of the pipeline to run. This parameter is only needed if the project has multiple pipeline definitions. ' +
         'If not provided and multiple pipelines exist, the tool will return a list of available pipelines for the user to choose from. ' +
         'If provided, it must exactly match one of the pipeline names returned by the tool.',
+    )
+    .optional(),
+  configContent: z
+    .string()
+    .describe(
+      'The content of the CircleCI YAML configuration file for the pipeline.',
     )
     .optional(),
 });
