@@ -47,7 +47,7 @@ export class JobsPrivate {
     const parsedError = JobErrorResponseSchema.safeParse(errorResult);
 
     if (!parsedOutput.success || !parsedError.success) {
-      throw new Error('Failed to parse job output or error response');
+       throw new Error(`Failed to parse job output or error response for job:${jobNumber} task:${taskIndex} step:${stepId}`);
     }
 
     return {
